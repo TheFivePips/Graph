@@ -45,6 +45,7 @@ class Graph {
         delete this.adjacencyList[vertex]
     }
     // depth first traversal
+    // visit all the neighbor nodes possible before backtracking
     DFTrecursive(start) {
         // this is the results array we will be returning at the end
         const results = []
@@ -86,10 +87,37 @@ class Graph {
                 // loop through the current vertex's neighbors and add them to the stack
                 this.adjacencyList[currentVertex].forEach(neighbor => {
                     if(!visited[neighbor]){
+                        // visited[neighbor] = true 
                         stack.push(neighbor)
                     }
                 })
             }
+        }
+        return results
+    }
+    
+    // breadth first traversal
+    // visit all immediate neighbors before moving to the immediate neighbor's neighbors
+    BFT(start){
+        // using a queue instead of a stack like in the DFTiterative approach but otherwise almost exactly the same
+        // this could be done in multiple slightly different ways just by changing when it gets added to the visited obj
+        const queue = []
+        const results = []
+        const visited = {}
+        let currentVertex
+        queue.push(start)
+        visited[start] = true
+        while(queue.length > 0){
+            currentVertex = queue.shift()
+            results.push(currentVertex)
+            // you could add in .slice().resverse() before the foreach method if you wanted it to add in neighbors in a reverse order
+            // still BFT but in a different order, much like the difference in order in the above DFT approaches
+            this.adjacencyList[currentVertex].forEach(neighbor => {
+                if(!visited[neighbor]){
+                    visited[neighbor] = true
+                    queue.push(neighbor)
+                }
+            })
         }
         return results
     }
@@ -108,5 +136,5 @@ g.addEdge("Austin", "Cooperstown")
 
 
 console.log(g.adjacencyList);
-console.log(g.DFTiterative("Austin"));
+console.log(g.BFT("Austin"));
 
